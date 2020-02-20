@@ -1,10 +1,10 @@
-Okay so I have to tried to classify entities with regular expression and entity recognition from spacy. 
+Okay so I have to tried to classify entities with manual regular expression and entity-recognition from spacy. 
 
-If you see a tag that looks like <TAG> that means a regular expression made it 
+If you see a tag that looks like "<TAG>" that means a regular expression made it 
 
 If you see a tag that is in all caps it was done by spacy 
 
-	On second thought we probably should rap those in <> those as well 
+	On second thought we probably should rap those in "<>" those as well 
 	(easier for network to recongine those are special tokens)
 
 I also added start and stop tokens, that will allow us to put the location either at the end or beginning of the sequence 
