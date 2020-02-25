@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer
 
 nltk.download('wordnet')
 lemmatizer = WordNetLemmatizer()
-filename_train = r"C:\Users\drewb\PycharmProjects\FirstProject\KegalCompetition\train.csv"
+filename_train = r"preprocessing_scripts/train.csv"
 nlp = spacy.load('en_core_web_sm')
 
 
