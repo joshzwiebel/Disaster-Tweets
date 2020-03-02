@@ -1,22 +1,28 @@
-import spacy
 import csv
 import re
+import pandas as pd
 import nltk
+import spacy
 from nltk.stem import WordNetLemmatizer
+
 nltk.download('wordnet')
 lemmatizer = WordNetLemmatizer()
-filename_train = r"C:\Users\drewb\PycharmProjects\FirstProject\KegalCompetition\train.csv"
+filename_train = R"train.csv"
 nlp = spacy.load('en_core_web_sm')
+
+targets = pd.read_csv("train.csv")["target"].to_csv("targets.csv",header=None,index=None)
 
 def is_ascii(s):
     return all(ord(c) < 128 for c in s)
+
 
 def extract_entities(s):
     doc = nlp(s)
     new_string = s
     for ent in doc.ents:
-        new_string = new_string.replace(ent.text, ' ' + ent.label_ +' ')
+        new_string = new_string.replace(ent.text, ' ' + ent.label_ + ' ')
     return new_string
+
 
 def lemmatize_text(s):
     new_string = ''
@@ -26,6 +32,7 @@ def lemmatize_text(s):
         except:
             new_string += word + ' '
     return new_string
+
 
 keywords = list()
 locations = list()
@@ -42,14 +49,9 @@ with open(filename_train, encoding="utf8") as csvfile:
         text = text.replace("\'", ' ')
         text = text.replace("\"", ' ')
         text = text.replace('\n', ' ')
-        #text = lemmatize_text(text)
+        # text = lemmatize_text(text)
         texts.append(extract_entities(text))
         targets.append(target)
-
-
-
-
-
 
 new_texts = list()
 for text in texts:
@@ -58,7 +60,7 @@ for text in texts:
         if re.match("^((https|http|ftp|file)?:\/\/).*", token):
             new_string += "<LINK> "
             continue
-        #need to check for time regex
+        # need to check for time regex
         if re.match("[0-9]+:[0-9]+(am|AM|pm|PM)?", token):
             new_string += "TIME "
             continue
