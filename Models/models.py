@@ -20,11 +20,11 @@ def NaiveModel(vocab_size):  # 70% accuracy
 
 def NaiveIteration(vocab_size):
     model = Sequential([
-        Embedding(vocab_size, 64),
-        Bidirectional(GRU(64, return_sequences=True, dropout=0.5, recurrent_dropout=0.5)),
-        Bidirectional(GRU(64,return_sequences=True, dropout=0.5, recurrent_dropout=0.5)),
+        Embedding(vocab_size,32),
+        Bidirectional(GRU(16, return_sequences=True, dropout=0.5, recurrent_dropout=0.5)),
+        Bidirectional(GRU(16,return_sequences=True, dropout=0.5, recurrent_dropout=0.5)),
         BatchNormalization(),
-        Dense(64, activation='relu',kernel_regularizer=l1_l2()),
+        Dense(16, activation='relu'),
         Dropout(0.5),
         Dense(1, activation='sigmoid')
     ])
