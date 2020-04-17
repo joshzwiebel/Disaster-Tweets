@@ -34,10 +34,10 @@ def lemmatize_text(s):
     return new_string
 
 
-keywords = list()
-locations = list()
-texts = list()
-targets = list()
+keywords = []
+locations = []
+texts = []
+targets = []
 with open(filename_train, encoding="utf8") as csvfile:
     reader = csv.DictReader(csvfile)
     itr = 0
@@ -53,7 +53,7 @@ with open(filename_train, encoding="utf8") as csvfile:
         texts.append(extract_entities(text))
         targets.append(target)
 
-new_texts = list()
+new_texts = []
 for text in texts:
     new_string = '<START> '
     for token in text.split(' '):
