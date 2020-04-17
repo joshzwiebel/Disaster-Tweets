@@ -5,13 +5,14 @@ import nltk
 import spacy
 from nltk.stem import WordNetLemmatizer
 
-nltk.download('wordnet')
+nltk.download("wordnet")
 lemmatizer = WordNetLemmatizer()
-filename_train = R"test.csv"
-nlp = spacy.load('en_core_web_sm')
+filename_train = r"test.csv"
+nlp = spacy.load("en_core_web_sm")
 
 targets = pd.read_csv("train.csv")["target"].to_csv(
-    "targets.csv", header=None, index=None)
+    "targets.csv", header=None, index=None
+)
 
 
 def is_ascii(s):
@@ -22,17 +23,17 @@ def extract_entities(s):
     doc = nlp(s)
     new_string = s
     for ent in doc.ents:
-        new_string = new_string.replace(ent.text, ' ' + ent.label_ + ' ')
+        new_string = new_string.replace(ent.text, " " + ent.label_ + " ")
     return new_string
 
 
 def lemmatize_text(s):
-    new_string = ''
-    for word in s.split(' '):
+    new_string = ""
+    for word in s.split(" "):
         try:
-            new_string += lemmatizer.lemmatize(word) + ' '
+            new_string += lemmatizer.lemmatize(word) + " "
         except:
-            new_string += word + ' '
+            new_string += word + " "
     return new_string
 
 
@@ -44,21 +45,26 @@ with open(filename_train, encoding="utf8") as csvfile:
     reader = csv.DictReader(csvfile)
     itr = 0
     for row in reader:
-        keyword, location, text, target = row['keyword'], row['location'], row['text'], row['target']
+        keyword, location, text, target = (
+            row["keyword"],
+            row["location"],
+            row["text"],
+            row["target"],
+        )
         keywords.append(keyword)
         locations.append(location)
-        text = text.replace("\n", ' ')
-        text = text.replace("\'", ' ')
-        text = text.replace("\"", ' ')
-        text = text.replace('\n', ' ')
+        text = text.replace("\n", " ")
+        text = text.replace("'", " ")
+        text = text.replace('"', " ")
+        text = text.replace("\n", " ")
         text = lemmatize_text(text)
         texts.append(extract_entities(text))
         targets.append(target)
 
 new_texts = []
 for text in texts:
-    new_string = '<START> '
-    for token in text.split(' '):
+    new_string = "<START> "
+    for token in text.split(" "):
         if re.match("^((https|http|ftp|file)?:\/\/).*", token):
             new_string += "<LINK> "
             continue
@@ -67,22 +73,22 @@ for text in texts:
             new_string += "TIME "
             continue
 
-        temp = token.replace(';', ' ')
-        temp = temp.replace('?', ' ')
-        temp = temp.replace(':', ' ')
-        temp = temp.replace('!', ' ')
+        temp = token.replace(";", " ")
+        temp = temp.replace("?", " ")
+        temp = temp.replace(":", " ")
+        temp = temp.replace("!", " ")
         if re.match("^-?\d*\.?\d+$", temp):
             new_string += "<NUM> "
             continue
 
-        temp = temp.replace('-', ' ')
-        temp = temp.replace('.', ' ')
-        temp = temp.replace('(', ' ')
-        temp = temp.replace(')', ' ')
-        temp = temp.replace('{', ' ')
-        temp = temp.replace('}', ' ')
-        temp = temp.replace('[', ' ')
-        temp = temp.replace(']', ' ')
+        temp = temp.replace("-", " ")
+        temp = temp.replace(".", " ")
+        temp = temp.replace("(", " ")
+        temp = temp.replace(")", " ")
+        temp = temp.replace("{", " ")
+        temp = temp.replace("}", " ")
+        temp = temp.replace("[", " ")
+        temp = temp.replace("]", " ")
 
         if re.match("^@.*", temp):
             new_string += "<USER>"
@@ -95,18 +101,18 @@ for text in texts:
         else:
 
             new_string += temp
-        new_string += ' '
+        new_string += " "
     new_string += "<STOP>"
-    new_string = new_string.replace('*', " * ")
-    new_string = new_string.replace('&', ' ')
-    new_string = new_string.replace('$', ' ')
-    new_string = new_string.replace('#', ' ')
-    new_string = new_string.replace('^', ' ')
-    new_string = new_string.replace('\\', ' ')
-    new_string = new_string.replace('/', ' ')
-    new_string = new_string.replace('`', ' ')
-    new_string = new_string.replace('~', ' ')
-    new_texts.append(' '.join(new_string.split()))
+    new_string = new_string.replace("*", " * ")
+    new_string = new_string.replace("&", " ")
+    new_string = new_string.replace("$", " ")
+    new_string = new_string.replace("#", " ")
+    new_string = new_string.replace("^", " ")
+    new_string = new_string.replace("\\", " ")
+    new_string = new_string.replace("/", " ")
+    new_string = new_string.replace("`", " ")
+    new_string = new_string.replace("~", " ")
+    new_texts.append(" ".join(new_string.split()))
 with open("new_train_data.txt", "w") as f:
     for t in new_texts:
         f.write(t + "\n")
