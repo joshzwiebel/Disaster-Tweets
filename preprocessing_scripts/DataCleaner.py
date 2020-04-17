@@ -10,7 +10,9 @@ lemmatizer = WordNetLemmatizer()
 filename_train = R"test.csv"
 nlp = spacy.load('en_core_web_sm')
 
-targets = pd.read_csv("train.csv")["target"].to_csv("targets.csv",header=None,index=None)
+targets = pd.read_csv("train.csv")["target"].to_csv(
+    "targets.csv", header=None, index=None)
+
 
 def is_ascii(s):
     return all(ord(c) < 128 for c in s)
