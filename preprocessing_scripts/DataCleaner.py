@@ -1,7 +1,8 @@
 import csv
 import re
-import pandas as pd
+
 import nltk
+import pandas as pd
 import spacy
 from nltk.stem import WordNetLemmatizer
 
